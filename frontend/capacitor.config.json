@@ -1,0 +1,12 @@
+{
+  "appId": "com.smart.app",
+  "appName": "Smart App",
+  "webDir": "dist",
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "45928153380-vajapkld3p1ffehtissdg198mmjek2fu.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
+  }
+}
