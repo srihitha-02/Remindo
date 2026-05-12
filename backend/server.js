@@ -34,11 +34,13 @@ app.get('/users', async (req, res) => {
 
 // Start notification scheduler
 const { startNotificationScheduler } = require('./services/notificationService');
+const { initializeFirebase } = require('./config/firebaseAdmin');
 
 // Sync database and start server
 sequelize.sync({ alter: true })
     .then(() => {
         console.log('PostgreSQL connected and tables synced');
+        initializeFirebase();
         startNotificationScheduler();
         app.listen(PORT, '0.0.0.0', () => {
             console.log(`Server running on all interfaces at port ${PORT}`);

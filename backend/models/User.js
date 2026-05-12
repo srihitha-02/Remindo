@@ -52,6 +52,10 @@ const User = sequelize.define('User', {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
     },
+    fcmToken: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
 }, {
     tableName: 'users',
     timestamps: true,

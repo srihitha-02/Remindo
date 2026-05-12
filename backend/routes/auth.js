@@ -65,8 +65,8 @@ router.post('/signup', async (req, res) => {
         res.json({ msg: 'OTP sent to email', email });
 
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+        console.error(err);
+        res.status(500).json({ msg: 'Internal server error' });
     }
 });
 
@@ -194,8 +194,8 @@ router.post('/forgot-password', async (req, res) => {
         res.json({ msg: 'OTP sent to your email' });
 
     } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+        console.error(err);
+        res.status(500).json({ msg: 'Internal server error' });
     }
 });
 
@@ -394,6 +394,33 @@ router.put('/update-notifications', auth, async (req, res) => {
         await user.save();
 
         res.json({ msg: 'Notification settings updated', enabled: user.notificationsEnabled });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+// @route   POST api/auth/save-fcm-token
+// @desc    Save FCM token for native push notifications
+// @access  Private
+router.post('/save-fcm-token', auth, async (req, res) => {
+    const { fcmToken } = req.body;
+
+    if (!fcmToken) {
+        return res.status(400).json({ msg: 'FCM token is required' });
+    }
+
+    try {
+        let user = await User.findByPk(req.user.id);
+        if (!user) {
+            return res.status(404).json({ msg: 'User not found' });
+        }
+
+        user.fcmToken = fcmToken;
+        await user.save();
+
+        console.log(`Saved FCM token for user ${user.email}`);
+        res.json({ msg: 'FCM token saved successfully' });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');

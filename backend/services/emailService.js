@@ -1,13 +1,28 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: process.env.EMAIL_PORT == 465, // true for 465, false for other ports
+    host: 'smtp.googlemail.com',
+    port: 465,
+    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
     },
+    family: 4, // Force IPv4
+    debug: true,
+    logger: true,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000
+});
+
+// Verify connection configuration
+transporter.verify(function (error, success) {
+    if (error) {
+        console.error('SMTP Verification Error:', error);
+    } else {
+        console.log('SMTP Server is ready to take our messages');
+    }
 });
 
 /**
@@ -40,6 +55,7 @@ const sendOTP = async (email, otp, type = 'signup') => {
     };
 
     try {
+        console.log(`Sending ${type} OTP to ${email}...`);
         await transporter.sendMail(mailOptions);
         console.log(`Email sent successfully to ${email}`);
     } catch (error) {

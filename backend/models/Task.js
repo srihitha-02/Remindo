@@ -21,7 +21,8 @@ const Task = sequelize.define('Task', {
     },
     category: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
+        defaultValue: 'general',
     },
     date: {
         type: DataTypes.STRING,
